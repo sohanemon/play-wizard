@@ -7,6 +7,8 @@ Play-Wizard is a Python program to control media players via DBus.
 Ever wanted to control all your media players effortlessly with a single command or hotkey?  
 With **Play-Wizard**, you can wave your wand and take command of playback across all your running media players—no scripting required!  
 
+This program is inspired by OmniPause, which provided the foundational idea of managing multiple media players through a single interface.
+
 Enjoy a seamless and magical experience managing your media.
 
 ## **Dependencies**
@@ -72,6 +74,10 @@ Play-Wizard lets you control media players with straightforward commands:
 
 This project is built to bring simplicity and control to your media playback.  
 If you find bugs or have suggestions for improvement, please submit a pull request or open an issue on the repository.  
+
+## Acknowledgments
+
+- OmniPause for inspiring the core concept of managing media players through DBus.
 
 ## **License**
 
