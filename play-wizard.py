@@ -101,9 +101,6 @@ def seek(offset):
             except dbus.exceptions.DBusException as e:
                 print(f"Error seeking player {i}: {e}")
 
-# Initialize a dictionary or variable to store the speed for each player.
-player_speeds = {}
-
 def set_speed(speed):
     try:
         # Check if the input is relative (starts with '+' or '-')
@@ -117,6 +114,30 @@ def set_speed(speed):
         print("Error: Speed must be a numeric value (e.g., 1.0, 0.5, 2.0, +0.1, -0.1).")
         return
 
+    # Determine a common base speed if relative adjustment is requested
+    common_base_speed = None
+    if relative:
+        for i in players:
+            player = bus.get_object(i, '/org/mpris/MediaPlayer2')
+            try:
+                current_speed = player.Get(
+                    'org.mpris.MediaPlayer2.Player', 
+                    'Rate', 
+                    dbus_interface='org.freedesktop.DBus.Properties'
+                )
+                if common_base_speed is None:
+                    common_base_speed = current_speed
+                else:
+                    common_base_speed = min(common_base_speed, current_speed)
+            except dbus.exceptions.DBusException:
+                continue
+        if common_base_speed is not None:
+            new_speed = common_base_speed + delta
+        else:
+            print("Error: Unable to determine base speed.")
+            return
+
+    # Apply the calculated speed to all players
     for i in players:
         player = bus.get_object(i, '/org/mpris/MediaPlayer2')
         player_status = player.Get(
@@ -126,17 +147,9 @@ def set_speed(speed):
         )
         if player_status in ['Playing', 'Paused']:
             try:
-                # Get the current speed
-                current_speed = player.Get(
-                    'org.mpris.MediaPlayer2.Player', 
-                    'Rate', 
-                    dbus_interface='org.freedesktop.DBus.Properties'
-                )
-                
-                # Calculate the new speed
-                if relative:
-                    new_speed = current_speed + delta
-                
+                # Round the speed to 2 decimal places
+                new_speed = round(new_speed, 2)
+
                 # Ensure the speed is positive
                 if new_speed <= 0:
                     print(f"Error: Resulting speed {new_speed} is invalid. Speed must be greater than 0.")
