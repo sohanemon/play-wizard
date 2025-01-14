@@ -101,6 +101,7 @@ def seek(offset):
             except dbus.exceptions.DBusException as e:
                 print(f"Error seeking player {i}: {e}")
 
+
 def set_speed(speed):
     try:
         # Check if the input is relative (starts with '+' or '-')
@@ -114,57 +115,71 @@ def set_speed(speed):
         print("Error: Speed must be a numeric value (e.g., 1.0, 0.5, 2.0, +0.1, -0.1).")
         return
 
-    # Determine a common base speed if relative adjustment is requested
-    common_base_speed = None
+    initial_speeds = {}
     if relative:
+        # Store initial speeds for each player
         for i in players:
             player = bus.get_object(i, '/org/mpris/MediaPlayer2')
-            try:
+            player_status = player.Get(
+                'org.mpris.MediaPlayer2.Player',
+                'PlaybackStatus',
+                dbus_interface='org.freedesktop.DBus.Properties'
+            )
+
+            if player_status in ['Playing', 'Paused']:
                 current_speed = player.Get(
-                    'org.mpris.MediaPlayer2.Player', 
-                    'Rate', 
+                    'org.mpris.MediaPlayer2.Player',
+                    'Rate',
                     dbus_interface='org.freedesktop.DBus.Properties'
                 )
-                if common_base_speed is None:
-                    common_base_speed = current_speed
-                else:
-                    common_base_speed = min(common_base_speed, current_speed)
-            except dbus.exceptions.DBusException:
+                initial_speeds[i] = current_speed
+
+        # Apply relative adjustment based on initial speeds
+        for i, initial_speed in initial_speeds.items():
+            new_speed = round(initial_speed + delta, 2)
+
+            # Ensure the speed is positive
+            if new_speed <= 0:
+                print(f"Error: Resulting speed {new_speed} is invalid. Speed must be greater than 0.")
                 continue
-        if common_base_speed is not None:
-            new_speed = common_base_speed + delta
-        else:
-            print("Error: Unable to determine base speed.")
-            return
 
-    # Apply the calculated speed to all players
-    for i in players:
-        player = bus.get_object(i, '/org/mpris/MediaPlayer2')
-        player_status = player.Get(
-            'org.mpris.MediaPlayer2.Player', 
-            'PlaybackStatus', 
-            dbus_interface='org.freedesktop.DBus.Properties'
-        )
-        if player_status in ['Playing', 'Paused']:
-            try:
-                # Round the speed to 2 decimal places
-                new_speed = round(new_speed, 2)
+            player = bus.get_object(i, '/org/mpris/MediaPlayer2')
+            player.Set(
+                'org.mpris.MediaPlayer2.Player',
+                'Rate',
+                dbus.Double(new_speed),
+                dbus_interface='org.freedesktop.DBus.Properties'
+            )
+            print(f"Set speed to {new_speed} for player {i}.")
+    else:
+        # Set absolute speed
+        for i in players:
+            player = bus.get_object(i, '/org/mpris/MediaPlayer2')
+            player_status = player.Get(
+                'org.mpris.MediaPlayer2.Player',
+                'PlaybackStatus',
+                dbus_interface='org.freedesktop.DBus.Properties'
+            )
 
-                # Ensure the speed is positive
-                if new_speed <= 0:
-                    print(f"Error: Resulting speed {new_speed} is invalid. Speed must be greater than 0.")
-                    continue
+            if player_status in ['Playing', 'Paused']:
+                try:
+                    # Set the absolute new speed
+                    new_speed = round(new_speed, 2)
 
-                # Set the new speed
-                player.Set(
-                    'org.mpris.MediaPlayer2.Player', 
-                    'Rate', 
-                    dbus.Double(new_speed), 
-                    dbus_interface='org.freedesktop.DBus.Properties'
-                )
-                print(f"Set speed to {new_speed} for player {i}.")
-            except dbus.exceptions.DBusException as e:
-                print(f"Error setting speed for player {i}: {e}")
+                    # Ensure the speed is positive
+                    if new_speed <= 0:
+                        print(f"Error: Resulting speed {new_speed} is invalid. Speed must be greater than 0.")
+                        continue
+
+                    player.Set(
+                        'org.mpris.MediaPlayer2.Player',
+                        'Rate',
+                        dbus.Double(new_speed),
+                        dbus_interface='org.freedesktop.DBus.Properties'
+                    )
+                    print(f"Set speed to {new_speed} for player {i}.")
+                except dbus.exceptions.DBusException as e:
+                    print(f"Error setting speed for player {i}: {e}")
 
 
 def getPlayerList():
