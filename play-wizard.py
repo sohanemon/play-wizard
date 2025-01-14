@@ -88,7 +88,7 @@ def seek(offset):
         # Convert offset to microseconds (MPRIS uses microseconds)
         offset = int(offset) * 1000000
     except ValueError:
-        print("Error: Offset must be an integer representing seconds.")
+        print("Error: Offset must be an integer representing seconds (e.g., +10, -10, -30).")
         return
 
     for i in players:
