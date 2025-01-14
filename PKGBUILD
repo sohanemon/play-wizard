@@ -1,10 +1,10 @@
 # Maintainer: Sohan Emon <sohanemon@outlook.com>
 pkgname=play-wizard
 pkgver=1.0.3
-pkgrel=5
+pkgrel=2
 pkgdesc="Control multiple media players via DBus with a single command."
 arch=('any')
-url="https://github.com/yourusername/play-wizard"
+url="https://github.com/sohanemon/play-wizard"
 license=('GPL3')
 depends=('python' 'python-dbus')
 source=("LICENSE" "Makefile" "play-wizard.py" "README.md")
