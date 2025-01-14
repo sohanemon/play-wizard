@@ -32,43 +32,29 @@ Setup is simple:
 
 ## **Usage**
 
-Play-Wizard lets you control media players with straightforward commands:  
-- **Pause playback** for all running media players:  
-  ```bash
-  play-wizard pause
-  ```  
-- **Resume playback** of media players paused by Play-Wizard:  
-  ```bash
-  play-wizard play
-  ```  
-- **Stop playback** on all media players:  
-  ```bash
-  play-wizard stop
-  ```  
-- **Skip to the next track** on all playing media players:  
-  ```bash
-  play-wizard next
-  ```  
-- **Play the previous track** on all playing media players:  
-  ```bash
-  play-wizard previous
-  ```  
-- **Toggle playback state** of all media players:  
-  ```bash
-  play-wizard toggle
-  ```  
-  > **Note:** If any players are playing, the toggle command will pause them. If none are playing, it resumes playback on players paused by Play-Wizard.  
+Play-Wizard lets you control media players with straightforward commands. The following table summarizes the available commands:
 
-- **Seek** to a position in the current track:  
-  ```bash
-  play-wizard seek <seconds>
-  ```  
+| **Command**                | **Description**                                                                                   | **Example Usage**                    |
+|----------------------------|---------------------------------------------------------------------------------------------------|--------------------------------------|
+| `play-wizard pause`        | Pause playback for all running media players.                                                    | `play-wizard pause`                 |
+| `play-wizard play`         | Resume playback of media players paused by Play-Wizard.                                          | `play-wizard play`                  |
+| `play-wizard stop`         | Stop playback on all media players.                                                              | `play-wizard stop`                  |
+| `play-wizard next`         | Skip to the next track on all playing media players.                                             | `play-wizard next`                  |
+| `play-wizard previous`     | Play the previous track on all playing media players.                                            | `play-wizard previous`              |
+| `play-wizard toggle`       | Toggle playback state of all media players.                                                     | `play-wizard toggle`                |
+| `play-wizard seek <seconds>` | Seek to a position in the current track.                                                       | `play-wizard seek 30`               |
+| `play-wizard speed <value>` | Set playback speed for all players.                                                             | `play-wizard speed 1.5`             |
+| `play-wizard speed +<value>` or `-<value>` | Adjust playback speed relative to the current speed (e.g., `+0.1` to increase by 0.1x). | `play-wizard speed +0.1`            |
 
-- **Set playback speed** for all players:  
-  ```bash
-  play-wizard speed <multiplier>
-  ```  
-  Example: `play-wizard speed 1.5` for 1.5x playback speed.  
+### **Additional Notes**
+- **Toggle Command**:  
+  If any players are playing, the `toggle` command will pause them. If none are playing, it resumes playback on players paused by Play-Wizard.  
+
+- **Playback Speed**:  
+  - Use `play-wizard speed <value>` for absolute speed changes (e.g., `1.5` for 1.5x speed).  
+  - Use `play-wizard speed +<value>` or `-<value>` for relative speed changes (e.g., `+0.1` to increase speed by 0.1x).  
+  - The speed is rounded to two decimal places to ensure consistency.  
+
 
 ## **Contributing**
 
