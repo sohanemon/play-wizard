@@ -13,6 +13,10 @@ bus       = dbus.SessionBus()
 def do_nothing(*args, **kwargs):
     pass
 
+def get_version(pkgbuild_path="PKGBUILD"):
+    version = "1.0.4"
+    return version
+
 def get_player_name(i, player):
     if i.startswith("org.mpris.MediaPlayer2."):
         return i[len("org.mpris.MediaPlayer2."):]
@@ -196,7 +200,13 @@ if not os.path.isdir(directory):
 
 if len(sys.argv)-1 >= 1:
     getPlayerList()
-    if sys.argv[1] == 'pause':
+    if sys.argv[1] in ['--version', '-v']:
+        version = get_version()
+        if version:
+            print(f"Version: {version}")
+        else:
+            print("Error: Unable to determine version from PKGBUILD.")
+    elif sys.argv[1] == 'pause':
         pause()
     elif sys.argv[1] == 'play':
         play()
