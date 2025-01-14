@@ -27,7 +27,7 @@ Setup is simple:
    ```  
 2. Install the program:  
    ```bash
-   sudo make install
+   makepkg -si
    ```  
 
 ## **Usage**
