@@ -1,3 +1,4 @@
 pkg/play-wizard
 src
 play-wizard-*.pkg.tar.zst
+__pycache__

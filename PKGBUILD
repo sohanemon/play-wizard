@@ -1,7 +1,7 @@
 # Maintainer: Sohan Emon <sohanemon@outlook.com>
 pkgname=play-wizard
-pkgver=1.0.5
-pkgrel=3
+pkgver=1.0.6
+pkgrel=4
 pkgdesc="Control multiple media players via DBus with a single command."
 arch=('any')
 url="https://github.com/sohanemon/play-wizard"
